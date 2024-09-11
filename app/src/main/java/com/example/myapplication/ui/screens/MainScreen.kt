@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MainScreen(onButtonClick: () -> Unit) {
+fun MainScreen(onButtonClick: () -> Unit, onButton2Click: () -> Unit) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
 
@@ -37,6 +37,10 @@ fun MainScreen(onButtonClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onButtonClick) {
             Text("Go to Book List")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onButton2Click) {
+            Text("Go to Manga List")
         }
     }
 }

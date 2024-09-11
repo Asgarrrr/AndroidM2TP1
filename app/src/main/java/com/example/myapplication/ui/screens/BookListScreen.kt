@@ -4,55 +4,96 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.myapplication.ui.model.Book
+import com.example.myapplication.ui.model.ItemUi
+import com.example.myapplication.ui.viewModel.BookViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookListScreen(books: List<Book>) {
+fun BookListScreen(navController: NavController) {
+
+    val viewModel: BookViewModel = viewModel()
+    val booksList = viewModel.bookList.collectAsState(emptyList()).value
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Book List") }
+                title = { Text("Book List") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
-        }
-    ) { paddingValues ->
-        val groupedBooks = books.groupBy { it.genre }
+        },
+        bottomBar = {
+            Row {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    content = {
+                        Text("Add")
+                    },
+                    onClick = {
+                        viewModel.insertBook()
+                    }
+                )
+                Button(
+                    modifier = Modifier.weight(1f),
+                    content = {
+                        Text("Delete")
+                    },
+                    onClick = {
+                        viewModel.deleteAllBooks()
+                    }
+                )
+            }
 
+        }
+
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues)
         ) {
-            groupedBooks.forEach { (genre, booksInGenre) ->
-                item {
-                    Text(
-                        text = genre,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-                items(booksInGenre) { book ->
-                    BookItem(book)
+            items(booksList) { item ->
+                when (item) {
+                    is ItemUi.Header -> {
+                        Text(item.title)
+                    }
+                    is ItemUi.Item -> {
+                        BookItem(book = item)
+                    }
+                    is ItemUi.Footer -> {
+                        Text(item.title)
+                    }
                 }
             }
+
         }
     }
 }
 
 @Composable
-fun BookItem(book: Book) {
+fun BookItem(book: ItemUi.Item) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,7 +124,7 @@ fun BookItem(book: Book) {
 @Composable
 fun PreviewBookItem() {
     BookItem(
-        Book(
+        ItemUi.Item(
             id = 1,
             title = "1984",
             author = "George Orwell",

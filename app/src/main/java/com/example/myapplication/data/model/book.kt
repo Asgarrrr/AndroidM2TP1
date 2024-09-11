@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.model
+package com.example.myapplication.data.model
 
 data class Book(
     val id: Int,
