@@ -25,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.data.model.MangaObject
-import com.example.myapplication.ui.model.MangaUi
 import com.example.myapplication.ui.viewModel.MangaViewModel
 
 @Composable

@@ -5,12 +5,8 @@ import com.example.myapplication.data.repository.MangaRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.model.Manga
 import com.example.myapplication.data.model.MangaObject
-import com.example.myapplication.data.model.toUi
-import com.example.myapplication.ui.model.MangaUi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class MangaViewModel : ViewModel() {
     private val mangaRepository: MangaRepository by lazy { MangaRepository() }
